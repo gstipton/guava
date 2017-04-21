@@ -133,6 +133,16 @@ public abstract class RateLimiter {
     return rateLimiter;
   }
 
+  /*
+   * overloads follow the usual convention: Foo(int), Foo(int, SleepingStopwatch)
+   */
+  @VisibleForTesting
+  static RateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, double maxBurstSeconds) {
+    RateLimiter rateLimiter = new SmoothBursty(stopwatch, maxBurstSeconds);
+    rateLimiter.setRate(permitsPerSecond);
+    return rateLimiter;
+  }
+
   /**
    * Creates a {@code RateLimiter} with the specified stable throughput, given as
    * "permits per second" (commonly referred to as <i>QPS</i>, queries per second), and a <i>warmup
